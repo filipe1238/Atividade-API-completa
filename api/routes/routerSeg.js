@@ -94,7 +94,7 @@ routerSeg.post('/login', function (req, res) {
 })
 
 routerSeg.get('/index', function(req, res) {
-    res.render('index', { title: 'Express' });
+    res.render('index', { title: 'variavel express' });
     });
 
 
