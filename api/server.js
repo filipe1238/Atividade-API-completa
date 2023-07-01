@@ -2,15 +2,15 @@ require('dotenv').config()
 
 const express = require ('express')
 const morgan = require ('morgan')
-const helmet = require ('helmet')
+/* const helmet = require ('helmet') */
 var cons = require("consolidate");
-var __ = require("underscore");
-__.string = require("underscore.string");
+/* var __ = require("underscore");
+__.string = require("underscore.string"); */
 
 const app = express ()
 
 app.use (morgan("tiny"))
-app.use (helmet())
+/* app.use (helmet()) */
 app.engine("html", cons.underscore);
 app.set("view engine", "html");
 app.set("views", "../front");

@@ -2,9 +2,9 @@
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
-    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta https-equiv="Content-Security-Policy" content="default-src *;" />
     <title>Meu Client</title>
+    <link rel="stylesheet" href="css/styles.css" />
     <link
       rel="stylesheet"
       href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css"
@@ -20,6 +20,13 @@
   </head>
   <body>
     <h4>Iste é um teste, isto é uma variavel vindo do express: <%- title %></h4>
-    <button class="btn btn-primary">Clique aqui</button>
+    <button class="btn btn-secondary" onclick="teste()">Teste</button>
+
+    <script>
+      function teste() {
+        alert("teste");
+      }
+      
+    </script>
   </body>
 </html>
