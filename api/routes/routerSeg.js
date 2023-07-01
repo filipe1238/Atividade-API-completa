@@ -9,6 +9,8 @@ const knex = require("knex")(knexConfig.development);
 routerSeg.use(express.urlencoded({ extended: true }));
 routerSeg.use(express.json());
 
+let bearerToken;
+
 routerSeg.checkToken = (req, res, next) => {
   let authInfo = req.get("authorization");
   console.log(authInfo);
@@ -25,7 +27,7 @@ routerSeg.checkToken = (req, res, next) => {
       return;
     }
 
-    jwt.verify(token, process.env.SECRET_KEY, (err, decodeToken) => {
+    jwt.verify(bearerToken, process.env.SECRET_KEY, (err, decodeToken) => {
       if (err) {
         res.status(401).json({ message: "Acesso negado" });
         return;
@@ -82,7 +84,7 @@ routerSeg.post("/login", function (req, res) {
               expiresIn: 3600,
             }
           );
-
+          this.bearerToken = tokenJWT;
           res.status(200).json({
             id: usuario.id,
             login: usuario.login,
@@ -103,8 +105,35 @@ routerSeg.post("/login", function (req, res) {
     });
 });
 
+routerSeg.get("/produto", routerSeg.checkToken, function (req, res) {
+  console.log("chegou aqui");
+  knex
+    .select("*")
+    .from("produtos")
+    .then((produtos) => {
+      res.status(200).json(produtos);
+    })
+    .catch((err) => {
+      res.status(500).json({
+        message: "Erro ao buscar produtos - " + err.message,
+      });
+    });
+});
+
 routerSeg.get("/index", function (req, res) {
   res.render("index", { title: "variavel express" });
 });
+routerSeg.get("/login", function (req, res) {
+  res.render("login", { title: "variavel express" });
+});
+
 
 module.exports = routerSeg;
+
+ //nome, login, senha, email em um json
+//  {
+//   "nome": "teste",
+//   "login": "teste",
+//   "senha": "teste",
+//   "email": "teste"
+// }
