@@ -9,15 +9,15 @@ const knex = require("knex")(knexConfig.development);
 routerSeg.use(express.urlencoded({ extended: true }));
 routerSeg.use(express.json());
 
-let bearerToken;
+var bearerToken;
+var protectedContent = [];
 
 routerSeg.checkToken = (req, res, next) => {
   let authInfo = req.get("authorization");
-  console.log(authInfo);
-  if (authInfo) {
-    const [bearer, token] = authInfo.split(" ");
-
-    if (!/Bearer/.test(bearer)) {
+  /* console.log(authInfo); */
+  if (bearerToken) {
+    /* const [bearer, token] = authInfo.split(" "); 
+     if (!/Bearer/.test(bearer)) {
       res
         .status(400)
         .json({
@@ -25,7 +25,7 @@ routerSeg.checkToken = (req, res, next) => {
           error: true,
         });
       return;
-    }
+    } */
 
     jwt.verify(bearerToken, process.env.SECRET_KEY, (err, decodeToken) => {
       if (err) {
@@ -84,7 +84,7 @@ routerSeg.post("/login", function (req, res) {
               expiresIn: 3600,
             }
           );
-          this.bearerToken = tokenJWT;
+          bearerToken = tokenJWT;
           res.status(200).json({
             id: usuario.id,
             login: usuario.login,
@@ -111,6 +111,7 @@ routerSeg.get("/produto", routerSeg.checkToken, function (req, res) {
     .select("*")
     .from("produtos")
     .then((produtos) => {
+      protectedContent = produtos;
       res.status(200).json(produtos);
     })
     .catch((err) => {
@@ -120,6 +121,8 @@ routerSeg.get("/produto", routerSeg.checkToken, function (req, res) {
     });
 });
 
+
+/* Páginas */
 routerSeg.get("/index", function (req, res) {
   res.render("index", { title: "variavel express" });
 });
@@ -127,6 +130,13 @@ routerSeg.get("/login", function (req, res) {
   res.render("login", { title: "variavel express" });
 });
 
+routerSeg.get("/produtos", routerSeg.checkToken, function (req, res) {
+  res.render("produtos", { protectedContent: protectedContent });
+});
+
+routerSeg.get("/formProdutos", routerSeg.checkToken, function (req, res) {
+  res.render("form-produtos", { title: "variavel express" });
+});
 
 module.exports = routerSeg;
 

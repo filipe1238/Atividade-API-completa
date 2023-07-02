@@ -105,20 +105,22 @@
       <div class="signup">
         <form>
           <label for="chk" aria-hidden="true">Sign up</label>
-          <input type="text" name="txt" placeholder="User name" required="" />
-          <input type="email" name="email" placeholder="Email" required="" />
+          <input type="text" name="txt" id="user-name" placeholder="User name" required="" />
+          <input type="text" name="txt" id="user-login" placeholder="User login" required="" />
+          <input type="email" name="email" id="user-email" placeholder="Email" required="" />
           <input
             type="password"
             name="pswd"
+            id="user-password"
             placeholder="Password"
             required=""
           />
-          <button>Sign up</button>
+          <button onclick="registerSubmit()">Sign up</button>
         </form>
       </div>
 
       <div class="login">
-        <form>
+        <form onsubmit="submitForm(event)">
           <label for="chk" aria-hidden="true">Login</label>
           <input id="email" name="email" placeholder="Email" required="" />
           <input
@@ -156,7 +158,7 @@
 		  .then((dataReceived) => {
 			// If login is successful, redirect to home page
 			if (dataReceived) {
-			  window.location.href = "http://localhost:3000/seg/produto";
+			  window.location.href = "http://localhost:3000/seg/produtos";
 			}
 			// If login is not successful, show error message
 			else {
@@ -168,6 +170,46 @@
 			console.error("Error:", error);
 		  });
       }
+
+      function registerSubmit () {
+        var nome = document.getElementById("user-name").value;
+        var login = document.getElementById("user-login").value;
+        var email = document.getElementById("user-email").value;
+        var senha = document.getElementById("user-password").value;
+        var data = {
+          nome: nome,
+          login: login,
+          email: email,
+          senha: senha,
+        };
+        // Send data to backend using fetch
+        fetch("http://localhost:3000/seg/register", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(data),
+        })
+        // Get response from backend 
+        .then((response) => {return response.json()})
+        // Get data from response
+        .then((dataReceived) => {
+          // If register is successful, redirect to home page
+          if (dataReceived) {
+            window.location.href = "http://localhost:3000/seg/login";
+          }
+          // If register is not successful, show error message
+          else {
+            alert("Erro ao cadastrar");
+          }
+        })
+      }
+
+      function submitForm(event){
+        event.preventDefault();
+    }
+      
+                              
     </script>
   </body>
 </html>
