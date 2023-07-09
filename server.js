@@ -13,7 +13,7 @@ app.use (morgan("tiny"))
 /* app.use (helmet()) */
 app.engine("html", cons.underscore);
 app.set("view engine", "html");
-app.set("views", "../front");
+app.set("views", "./front");
 
 const routerClient = require ('./routes/routerClient')
 app.use ('/public', routerClient)
